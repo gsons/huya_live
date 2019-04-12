@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>直播间统计</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="clearfix">
+        <div style="float:left;">
+            <div id="myRenqiChart" style="width:1000px;height:300px;"></div>
+            <div id="myGiftChart" style="width:1000px;height:300px;"></div>
+        </div>
+        <ul class="week-rank__bd" id="rank" style="float:left;">
+        </ul>
+       </div>
+    </div>
+    <script src="socket.io.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/3.8.5/echarts-en.common.js"></script>
+    <script>
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var today = year+"-"+month+"-"+day;
+    var ROOMID=GetQueryString("roomid")||"896048036";
+    var DATE=GetQueryString("date")||today;
+    var ROOMARRAY={'896048036':'大瑶','1681752043':'兵阳','1186456931':'酒儿','1952895812':'璐璐','2021320845':'狐狸','520iu':'IU','kaerlol':'卡尔','1748573795':'RDRIKI'};
+    var BASEURL='18.221.29.92';
+    // var BASEURL='localhost';
+    var socket = io.connect(BASEURL+':8000');
+    var myRenqiChart = echarts.init(document.getElementById('myRenqiChart'));
+    var myGiftChart = echarts.init(document.getElementById('myGiftChart'));
+    
+    var is_online=(DATE==today)?true:false;
+    rankData(ROOMID,DATE,socket,is_online);
+    showRenqiChar(ROOMID,ROOMARRAY,DATE,myRenqiChart,socket,is_online);
+    showGiftChar(ROOMID,ROOMARRAY,DATE,myGiftChart,socket,is_online); 
+
+    function GetQueryString(name) {
+          var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+          var r = window.location.search.substr(1).match(reg);
+          if(r!=null)return  unescape(r[2]); return null;
+    }
+   
+    function getDate(num){
+        var date = new Date();
+        date.setDate(date.getDate()+num);
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        return year+"-"+month+"-"+day;
+    }
+    function getDateWord(date){
+        if(getDate(0)==date) return '今日';
+        else if(getDate(-1)==date) return '昨天';
+        else if(getDate(-2)==date) return '前天';
+        else return date;
+    }
+
+    function rankData(_roomid,_date,_socket,_isOnline) {
+
+         var settings = {
+            "async": false,
+            "crossDomain": true,
+            "url": "http://"+BASEURL+":8000/rank?roomid="+_roomid+'&date='+_date,
+            "method": "GET",
+            "headers": {
+                "cache-control": "no-cache"
+            }
+         }
+        var dateWord=getDateWord(_date);
+        $.ajax(settings).done(function(data) {
+            var data = JSON.parse(data);
+            var html = '<li style="text-align: center;"><h3>'+dateWord+'土豪榜</h3></li>';
+            var flag = 0;
+            var arr = [];
+            for (var i in data) {
+                arr.push({ data: data[i], price: data[i].price * 1000 });
+            }
+            arr.sort(function(a, b) {
+                return b.price - a.price;
+            });
+            // console.log(arr);
+            for (var i in arr) {
+                flag++;
+                if (flag > 99) break;
+                if (flag == 1) {
+                    html += '<li class="clearfix"><span class="item-num num-one">' + flag + '</span><span class="week-rank-name J_name">' + arr[i].data.from.name + '</span><span class="gold-num">' + arr[i].price.toFixed(0) + '<i></i></span></li>';
+                } else if (flag == 2) {
+                    html += '<li class="clearfix"><span class="item-num num-two">' + flag + '</span><span class="week-rank-name J_name">' + arr[i].data.from.name + '</span><span class="gold-num">' + arr[i].price.toFixed(0) + '<i></i></span></li>';
+                } else if (flag == 3) {
+                    html += '<li class="clearfix"><span class="item-num num-three">' + flag + '</span><span class="week-rank-name J_name">' + arr[i].data.from.name + '</span><span class="gold-num">' + arr[i].price.toFixed(0) + '<i></i></span></li>';
+                } else {
+                    html += '<li class="clearfix"><span class="item-num num-num2">' + flag + '</span><span class="week-rank-name J_name">' + arr[i].data.from.name + '</span><span class="gold-num">' + arr[i].price.toFixed(0) + '<i></i></span></li>';
+                }
+
+            }
+            $('#rank').html(html);
+            if(_isOnline)_socket.on('rank_'+_roomid, function(msg) {
+                var data = JSON.parse(msg);
+                var html = '<li style="text-align: center;"><h3>'+dateWord+'土豪榜</h3></li>';
+                var flag = 0;
+                var arr = [];
+                for (var i in data) {
+                    arr.push({ data: data[i], price: data[i].price * 1000 });
+                }
+                arr.sort(function(a, b) {
+                    return b.price - a.price;
+                });
+                // console.log(arr);
+                for (var i in arr) {
+                    flag++;
+                    if (flag > 99) break;
+                    if (flag == 1) {
+                        html += '<li class="clearfix"><span class="item-num num-one">' + flag + '</span><span class="week-rank-name J_name">' + arr[i].data.from.name + '</span><span class="gold-num">' + arr[i].price.toFixed(0) + '<i></i></span></li>';
+                    } else if (flag == 2) {
+                        html += '<li class="clearfix"><span class="item-num num-two">' + flag + '</span><span class="week-rank-name J_name">' + arr[i].data.from.name + '</span><span class="gold-num">' + arr[i].price.toFixed(0) + '<i></i></span></li>';
+                    } else if (flag == 3) {
+                        html += '<li class="clearfix"><span class="item-num num-three">' + flag + '</span><span class="week-rank-name J_name">' + arr[i].data.from.name + '</span><span class="gold-num">' + arr[i].price.toFixed(0) + '<i></i></span></li>';
+                    } else {
+                        html += '<li class="clearfix"><span class="item-num num-num2">' + flag + '</span><span class="week-rank-name J_name">' + arr[i].data.from.name + '</span><span class="gold-num">' + arr[i].price.toFixed(0) + '<i></i></span></li>';
+                    }
+
+                }
+                $('#rank').html(html);
+            });
+        });
+    }
+
+
+    function showRenqiChar(_roomid,_roomarray,_date,_dom,_socket,_isOnline){
+         var dateWord=getDateWord(_date);
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": "http://"+BASEURL+":8000/renqiList?roomid="+_roomid+'&date='+_date,
+            "method": "GET",
+            "headers": {
+                "cache-control": "no-cache"
+            }
+        }
+        var renqiList = [];
+        $.ajax(settings).done(function(response) {
+            var response = $.parseJSON(response);
+            var max = 0;
+            var sum = 0;
+            response.forEach(function(res) {
+                var date = new Date(res.time);
+                var time = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+                var item = [time, res.count];
+                if (res.count > max) max = res.count;
+                sum += res.count;
+                renqiList.push(item);
+            });
+            var len = renqiList.length;
+            var renqi = len > 0 ? (sum / len) : 0;
+            initRenqiChar(_dom, renqiList, '直播人气',dateWord+''+_roomarray[_roomid]+'直播间人气统计,平均人气值:' + renqi.toFixed(0) + ',最高人气值:' + max);
+            if(_isOnline)_socket.on('online_'+_roomid, function(msg) {
+                var date = new Date(msg.time);
+                var time = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+                var item = [time, msg.count];
+                if (msg.count > max) max = msg.count;
+                sum += msg.count;
+                renqiList.push(item);
+                len = renqiList.length;
+                renqi = len > 0 ? (sum / len) : 0;
+                initRenqiChar(_dom, renqiList, '直播人气',dateWord+''+_roomarray[_roomid]+'直播间人气统计,平均人气值:' + renqi.toFixed(0) + ',最高人气值:' + max);
+            });
+        });
+    }
+
+    function showGiftChar(_roomid,_roomarray,_date,_dom,_socket,_isOnline){
+         var dateWord=getDateWord(_date);
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": "http://"+BASEURL+":8000/giftList?roomid="+_roomid+'&date='+_date,
+            "method": "GET",
+            "headers": {
+                "cache-control": "no-cache"
+            }
+        }
+        var giftList = [];
+        $.ajax(settings).done(function(response) {
+            var response = $.parseJSON(response);
+            response.forEach(function(res) {
+                var date = new Date(res.time);
+                var time = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+                var item = [time, res.price];
+                giftList.push(item);
+            });
+            var sum = 0;
+            giftList.forEach(function(item) {
+                sum += item[1];
+            });
+            initGiftChar(_dom, giftList, 'Y币', dateWord+''+_roomarray[_roomid]+'直播间礼物统计 礼物总价值 ' + sum.toFixed(2) + 'Y币');
+            if(_isOnline) _socket.on('gift_'+_roomid, function(msg) {
+                if (msg.name == '虎粮') return;
+                var date = new Date(msg.time);
+                var time = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+                var item = [time, Math.round(msg.price * 100) / 100];
+                giftList.push(item);
+                sum = 0;
+                giftList.forEach(function(item) {
+                    sum += item[1];
+                });
+                initGiftChar(_dom, giftList, 'Y币', dateWord+''+_roomarray[_roomid]+'直播间礼物统计 礼物总价值 ' + sum.toFixed(2) + 'Y币');
+            });
+        });
+    }
+
+    //人气统计
+    function initRenqiChar(_dom, data, yName, title) {
+        var title = title || '';
+        var dateList = data.map(function(item) {
+            return item[0];
+        });
+        var valueList = data.map(function(item) {
+            return item[1];
+        });
+
+        option = {
+            visualMap: [{
+                show: false,
+                type: 'continuous',
+                seriesIndex: 0,
+                min: 0,
+                max: 400
+            }],
+
+
+            title: [{
+                left: 'center',
+                text: title
+            }, ],
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: [{
+                data: dateList
+            }],
+            yAxis: [{
+                splitLine: { show: false }
+            }],
+            grid: [{
+                bottom: '20%'
+            }, {
+                top: '20%'
+            }],
+            series: [{
+                name: yName,
+                type: 'line',
+                smooth: true,
+                symbol: 'none',
+                sampling: 'average',
+                itemStyle: {
+                    normal: {
+                        color: 'rgb(255, 70, 131)'
+                    }
+                },
+                areaStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgb(255, 158, 68)'
+                        }, {
+                            offset: 1,
+                            color: 'rgb(255, 70, 131)'
+                        }])
+                    }
+                },
+                data: valueList
+            }]
+
+        };
+
+        _dom.setOption(option);
+    }
+
+    //礼物统计
+    function initGiftChar(_dom, data, yName, title) {
+        var data_x = data.map(function(item) {
+            return item[0];
+        });
+        var data_y = data.map(function(item) {
+            return item[1];
+        });
+
+        var title = title || '';
+        option = {
+            tooltip: {
+                trigger: 'axis',
+                position: function(pt) {
+                    return [pt[0], '10%'];
+                }
+            },
+            title: {
+                left: 'center',
+                text: title,
+            },
+            // toolbox: {
+            //     feature: {
+            //         dataZoom: {
+            //             yAxisIndex: 'none'
+            //         },
+            //         restore: {},
+            //         saveAsImage: {}
+            //     }
+            // },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: data_x
+            },
+            yAxis: {
+                type: 'value',
+                boundaryGap: [0, '100%']
+            },
+            dataZoom: [{
+                type: 'inside',
+                start: 0,
+                end: 10
+            }, {
+                start: 0,
+                end: 10,
+                handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                handleSize: '80%',
+                handleStyle: {
+                    color: '#fff',
+                    shadowBlur: 3,
+                    shadowColor: 'rgba(0, 0, 0, 0.6)',
+                    shadowOffsetX: 2,
+                    shadowOffsetY: 2
+                }
+            }],
+            series: [{
+                name: yName,
+                type: 'line',
+                smooth: true,
+                symbol: 'none',
+                sampling: 'average',
+                itemStyle: {
+                    normal: {
+                        color: 'rgb(255, 70, 131)'
+                    }
+                },
+                areaStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgb(255, 158, 68)'
+                        }, {
+                            offset: 1,
+                            color: 'rgb(255, 70, 131)'
+                        }])
+                    }
+                },
+                data: data_y
+            }]
+        };
+
+        _dom.setOption(option);
+    }
+    </script>
+</body>
+
+</html>

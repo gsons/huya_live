@@ -1,0 +1,162 @@
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <style>
+    html,
+    body {
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+
+    .navbar-www {
+        background-color: rgb(252, 182, 123) !important;
+        border-color: rgb(255, 71, 131) !important;
+    }
+    .navbar-header a{
+      /*font-weight: bold;*/
+      color: #333;
+    }
+    </style>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    <script src="https://apps.bdimg.com/libs/angular-route/1.3.13/angular-route.js"></script>
+    <script src="https://cdn.bootcss.com/angular-ui-bootstrap/0.12.0/ui-bootstrap-tpls.min.js"></script>
+    <script src='ng-cn.js'></script>
+    <script type="text/javascript">
+    angular.module('app', ['ngRoute', 'ui.bootstrap'])
+        .controller('HomeController', function($scope, $route, $sce, $location) {
+            var roomArray = { 'dayao': '896048036', 'bingyang': '1681752043', 'jiuer': '1186456931', 'lulu': '1952895812', 'huli': '2021320845', 'iu': '520iu', 'kaer': 'kaerlol', 'riki': 1748573795 };
+            var roomObj = { '896048036': '大瑶', '1681752043': '兵阳', '1186456931': '酒儿', '1952895812': '璐璐', '2021320845': '狐狸', '520iu': 'IU', 'kaerlol': '卡尔', '1748573795': 'RDRIKI' };
+            var obj = $location.search();
+            var name = obj.name || 'dayao';
+            $scope.name = roomObj[roomArray[name]]+'的直播间';
+            $scope.url = $sce.trustAsResourceUrl("http://18.221.29.92:8000?roomid=" + roomArray[name]);
+            $scope.searchLive=function(){
+                var year=$scope.date.getFullYear();
+                var month=$scope.date.getMonth()+1;
+                var day=$scope.date.getDate();
+                $scope.url = $sce.trustAsResourceUrl("http://18.221.29.92:8000?roomid=" + roomArray[name] + '&date=' +year+'-'+month+'-'+day);
+            }
+            $scope.show = function(num) {
+                var date = new Date();
+                date.setDate(date.getDate() + num);
+                var year = date.getFullYear();
+                var month = date.getMonth() + 1;
+                var day = date.getDate();
+                var mydate = year + "-" + month + "-" + day;
+                $scope.url = $sce.trustAsResourceUrl("http://18.221.29.92:8000?roomid=" + roomArray[name] + '&date=' + mydate);
+            }
+            // var date = new Date();
+            // var year = date.getFullYear();
+            // var month = date.getMonth() + 1;
+            // var day = date.getDate();
+            // if(month<10) month='0'+month;
+            // if(day<10) day='0'+day;
+            // var mydate = year+"-"+month+"-"+day;
+            // $scope.date = mydate;
+            /*日期插件start*/
+            $scope.clear = function() {
+                $scope.date = null;
+            };
+
+            // Disable weekend selection
+            $scope.disabled = function(date, mode) {
+                return (mode === 'day' && (date.getDay() === 0 || date.getDay() === 6));
+            };
+
+            $scope.toggleMin = function() {
+                $scope.minDate = $scope.minDate ? null : new Date();
+            };
+            $scope.toggleMin();
+
+            $scope.open = function($event) {
+                console.log('open');
+                $event.preventDefault();
+                $event.stopPropagation();
+
+                $scope.opened = true;
+            };
+
+            $scope.dateOptions = {
+                formatYear: 'yy',
+                startingDay: 1,
+                class: 'datepicker'
+            };
+
+            $scope.initDate = new Date('2016-15-20');
+            $scope.formats = ['dd-MMMM-yyyy', 'yyyy-MM-dd', 'dd.MM.yyyy', 'shortDate'];
+            $scope.format = $scope.formats[1];
+            /*日期插件end*/
+        })
+        .config(function($routeProvider) {
+            $routeProvider.
+            when('/home', {
+                templateUrl: 'home.html',
+                controller: 'HomeController'
+            }).
+            otherwise({
+                redirectTo: '/home'
+            });
+
+        });
+    </script>
+</head>
+
+<body ng-app="app" class="ng-scope">
+    <script type="text/ng-template" id="home.html">
+        <nav class="navbar navbar-default navbar-www navbar-fixed-top" role="navigation">
+    <div class="container">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse"
+                data-target="#example-navbar-collapse">
+            <span class="sr-only">切换导航</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="">{{name}}</a>
+    </div>
+    <div class="collapse navbar-collapse" id="example-navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="color:rgb(119, 119, 119)
+;font-size:16px">
+                              直播数据 <b class="caret"></b>
+                          </a>
+               <ul class="dropdown-menu">
+                        <li><a href="javascript:;" ng-click="show(0)">今天</a></li>
+                        <li><a href="javascript:;" ng-click="show(-1)">昨天</a></li>
+                        <li><a href="javascript:;" ng-click="show(-2)">前天</a></li>
+                    </ul>
+
+            </li>
+        </ul>
+         <form class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" class="form-control input-sm" datepicker-popup="{{format}}" ng-model="date" is-open="opened" datepicker-options="dateOptions" ng-required="true" close-text="关闭" clear-text="清空" current-text="今天" placeholder="选择日期查询" />
+                                <span  class="input-group-btn">
+                                  <button type="button" class="btn btn-default btn-sm" ng-click="open($event)" style="padding: 8px 10px;"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-default btn-sm" ng-click="searchLive()"  style="color:rgb(119, 119, 119);">查询</button>
+                    </form>
+    </div>
+    </div>
+</nav>
+        <iframe id="myifra" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="yes" allowtransparency="yes" ng-src='{{url}}' style="width: 100%;height: 100%"></iframe>
+    </script>
+    <div class="container-flux">
+    <div ng-view="">
+    </div>
+    </div>
+</body>
+
+</html>

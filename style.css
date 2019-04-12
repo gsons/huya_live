@@ -1,0 +1,317 @@
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+            background: #f5f5f5;
+    }
+    .container{
+        width: 1250px;
+        margin:0px auto;
+        padding-top:60px;
+    }
+    .clearfix:after {
+        display: table;
+        content: " ";
+        clear: both;
+    }
+
+    .clearfix {
+        *zoom: 1;
+    }
+
+    .week-rank__bd {
+        width: 200px;
+        margin:0px auto;
+        vertical-align: baseline;
+    }
+
+    .week-rank__bd li {
+        list-style: none;
+        margin-bottom: 10px;
+    }
+
+    .week-rank__bd .num-one {
+         font-size: 0;
+        background-position: -146px -996px;
+        background-image: url(http://a.msstatic.com/huya/main/img/room_z_4bcd337.png);
+    }
+    .week-rank__bd .num-two {
+         font-size: 0;
+        background-position: -146px -1017px;
+        background-image: url(http://a.msstatic.com/huya/main/img/room_z_4bcd337.png);
+    }
+    .week-rank__bd .num-three {
+        background-position: -146px -1038px;
+         font-size: 0;
+        background-image: url(http://a.msstatic.com/huya/main/img/room_z_4bcd337.png);
+    }
+
+    
+    .week-rank__bd .num-one {
+        font-size: 0;
+        background-repeat: no-repeat;
+    }
+  
+
+    .week-rank__bd .item-num {
+        color: #fff;
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        text-align: center;
+        margin: 0 2px 0 0;
+        float: left;
+        background-repeat: no-repeat;
+    }
+
+ .week-rank__bd .num-num2 {
+     background-position: -146px -975px;
+     font-size: 12px;
+        background-image: url(http://a.msstatic.com/huya/main/img/room_z_4bcd337.png);
+   } 
+    .week-rank__bd .noble-icon {
+        margin: 0px 3px 0 2px;
+    }
+
+    .noble-level-4 {
+        background-position: 0 -50px;
+    }
+
+    .noble-icon {
+        width: 19px;
+        height: 20px;
+        float: left;
+        _display: inline;
+        background: url(http://a.msstatic.com/huya/main/img/guizu-icon_2bce6ff.png) no-repeat;
+    }
+
+    .noble-level-4 {
+        background-position: 0 -50px;
+    }
+
+    .noble-icon {
+        width: 19px;
+        height: 20px;
+        float: left;
+        _display: inline;
+        background: url(http://a.msstatic.com/huya/main/img/guizu-icon_2bce6ff.png) no-repeat;
+    }
+
+    .week-rank__bd .week-rank-name {
+        max-width: 110px;
+        float: left;
+        white-space: nowrap;
+        word-wrap: normal;
+        overflow: hidden;
+        -ms-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        cursor: pointer;
+    }
+
+    .week-rank__bd .level-icon {
+        float: left;
+    }
+
+    .level-icon4 {
+        background-position: 0 -44px;
+    }
+
+    .level-icon {
+        display: inline-block;
+        width: 22px;
+        height: 11px;
+        margin: 2px 0px 0px 2px;
+        background: url(http://a.msstatic.com/huya/main/img/level_sprite_d76323b.png) no-repeat;
+    }
+
+    .level-icon4 {
+        background-position: 0 -44px;
+    }
+
+    .level-icon {
+        display: inline-block;
+        width: 22px;
+        height: 11px;
+        background: url(http://a.msstatic.com/huya/main/img/level_sprite_d76323b.png) no-repeat;
+    }
+
+    .week-rank__bd .gold-num,
+    .week-rank__bd .vb-num {
+        float: right;
+        margin-right: 8px;
+        color: #666;
+        font-size: 12px;
+        left: 220px;
+    }
+
+    .week-rank__bd .gold-num i {
+        background-image: url(http://a.msstatic.com/huya/main/img/room_z_4bcd337.png);
+        background-position: -146px -1059px;
+    }
+
+    .week-rank__bd .gold-num i {
+        width: 16px;
+        height: 15px;
+        background-repeat: no-repeat;
+    }
+
+    .week-rank__bd .gold-num i,
+    .week-rank__bd .vb-num i {
+        float: right;
+         margin: 0px 0px 0 2px; 
+    }
+
+    .week-rank__bd .week-rank-name {
+        max-width: 110px;
+        font-size: 12px;
+        font-weight: bold;
+        float: left;
+        white-space: nowrap;
+        word-wrap: normal;
+        overflow: hidden;
+        -ms-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        cursor: pointer;
+    }
+ }
+
+
+.level-icon0 {
+    background-position: 0 0
+}
+.level-icon1 {
+    background-position: 0 -11px
+}
+.level-icon2 {
+    background-position: 0 -22px
+}
+.level-icon3 {
+    background-position: 0 -33px
+}
+.level-icon4 {
+    background-position: 0 -44px
+}
+.level-icon5 {
+    background-position: 0 -55px
+}
+.level-icon6 {
+    background-position: 0 -66px
+}
+.level-icon7 {
+    background-position: 0 -77px
+}
+.level-icon8 {
+    background-position: 0 -88px
+}
+.level-icon9 {
+    background-position: 0 -99px
+}
+.level-icon10 {
+    background-position: 0 -110px
+}
+.level-icon11 {
+    background-position: 0 -121px
+}
+.level-icon12 {
+    background-position: 0 -132px
+}
+.level-icon13 {
+    background-position: 0 -143px
+}
+.level-icon14 {
+    background-position: 0 -154px
+}
+.level-icon15 {
+    background-position: 0 -165px
+}
+.level-icon16 {
+    background-position: 0 -176px
+}
+.level-icon17 {
+    background-position: 0 -187px
+}
+.level-icon18 {
+    background-position: 0 -198px
+}
+.level-icon19 {
+    background-position: 0 -209px
+}
+.level-icon20 {
+    background-position: 0 -220px
+}
+.level-icon21 {
+    background-position: 0 -231px
+}
+.level-icon22 {
+    background-position: 0 -242px
+}
+.level-icon23 {
+    background-position: 0 -253px
+}
+.level-icon24 {
+    background-position: 0 -264px
+}
+.level-icon25 {
+    background-position: 0 -275px
+}
+.level-icon26 {
+    background-position: 0 -286px
+}
+.level-icon27 {
+    background-position: 0 -297px
+}
+.level-icon28 {
+    background-position: 0 -308px
+}
+.level-icon29 {
+    background-position: 0 -319px
+}
+.level-icon30 {
+    background-position: 0 -330px
+}
+.level-icon31 {
+    background-position: 0 -341px
+}
+.level-icon32 {
+    background-position: 0 -352px
+}
+.level-icon33 {
+    background-position: 0 -363px
+}
+.level-icon34 {
+    background-position: 0 -374px
+}
+.level-icon35 {
+    background-position: 0 -385px
+}
+.level-icon36 {
+    background-position: 0 -396px
+}
+.level-icon37 {
+    background-position: 0 -407px
+}
+.level-icon38 {
+    background-position: 0 -418px
+}
+.level-icon39 {
+    background-position: 0 -429px
+}
+
+.noble-level-6 {
+    background-position: 0 0
+}
+.noble-level-5 {
+    background-position: 0 -23px
+}
+.noble-level-4 {
+    background-position: 0 -50px
+}
+.noble-level-3 {
+    background-position: 0 -76px
+}
+.noble-level-2 {
+    background-position: 0 -101px
+}
+.noble-level-1 {
+    background-position: 0 -126px
+}
